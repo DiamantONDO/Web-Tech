@@ -1,6 +1,6 @@
 <script setup="tsx">
 import TaskCrud from './TaskCrud.vue';
-import { class } from "./class.vue";
+import Task from './Task.vue';
 </script>
 
 <template>
