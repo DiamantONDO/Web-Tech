@@ -47,4 +47,22 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+app.put("/api/tasks/:id", async (req, res) => {
+  const { status, completed } = req.body;
+  const { id } = req.params;
+
+  try {
+    const updatedTask = await pool.query(
+      "UPDATE user_tasks SET status=$1, completed=$2 WHERE id=$3 RETURNING *",
+      [status, completed, id]
+    );
+
+    res.json(updatedTask.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Update failed");
+  }
+});
+
+
 app.listen(5000, () => console.log("Server running on port 5000"));
