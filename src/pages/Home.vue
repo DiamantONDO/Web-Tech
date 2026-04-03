@@ -19,7 +19,6 @@ const goToRegister = () => {
 <template>
   <div class="home-container">
 
-    <!-- Navbar -->
     <nav class="navbar">
       <RouterLink to="/" class="logo-link">
         <h2 class="logo">TaskBuddy</h2>
@@ -32,7 +31,6 @@ const goToRegister = () => {
       </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero">
       <h1>Organize Your Tasks Easily</h1>
       <p>
@@ -130,7 +128,6 @@ const goToRegister = () => {
   margin-bottom: 30px;
 }
 
-/* BUTTONS */
 .btn-primary {
   background-color: #1e3a8a;
   color: white;
@@ -160,7 +157,6 @@ const goToRegister = () => {
   color: white;
 }
 
-/* FEATURES */
 .features {
   display: flex;
   justify-content: center;
