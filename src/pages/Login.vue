@@ -1,50 +1,47 @@
-//For JavaScript
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useUserStore } from "@/stores/useUserStore";
 
 const router = useRouter();
+const authStore = useAuthStore();
+const userStore = useUserStore();
 
-const email = ref("");
+const email    = ref("");
 const password = ref("");
 
-const login = async() => {
+const login = () => {
   if (!email.value || !password.value) {
     alert("Please enter email and password");
     return;
   }
 
-  try {
-    const res = await axios.post("http://localhost:5000/api/login", {
-      email: email.value,
-      password: password.value,
-    });
-    alert("Login successful!");
-      localStorage.setItem("user", JSON.stringify(res.data))
-      router.push("/dashboard");
+  const match = userStore.users.find(
+    (u) => u.email === email.value && u.password === password.value
+  );
 
-  } catch (error) {
-    alert("Login failed!");
+  if (!match) {
+    alert("Login failed! Invalid email or password.");
+    return;
   }
 
+  authStore.login(match);
+
+  alert("Login successful!");
+  router.push("/taskbuddy/dashboard");
 };
 </script>
 
-
-
-//For HTML
 <template>
   <div class="login-container">
 
-    <!-- Navbar -->
     <nav class="navbar">
       <RouterLink to="/" class="logo-link">
         <h2 class="logo">TaskBuddy</h2>
-     </RouterLink>
+      </RouterLink>
     </nav>
 
-    <!-- Login Card -->
     <div class="login-card">
 
       <h1>Welcome Back</h1>
@@ -84,9 +81,6 @@ const login = async() => {
   </div>
 </template>
 
-
-//===============================================================
-//For CSS
 <style scoped>
 .login-container {
   font-family: Arial, Helvetica, sans-serif;
@@ -99,7 +93,7 @@ const login = async() => {
   color: white;
 }
 
-.logo-link{
+.logo-link {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
@@ -109,7 +103,6 @@ const login = async() => {
   font-size: 24px;
 }
 
-/* Card */
 .login-card {
   max-width: 400px;
   margin: 100px auto;
@@ -128,7 +121,6 @@ const login = async() => {
   margin-bottom: 25px;
 }
 
-/* Form */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -147,7 +139,6 @@ const login = async() => {
   border: 1px solid #ccc;
 }
 
-/* Button */
 .btn-primary {
   width: 100%;
   background-color: #1e3a8a;
@@ -163,7 +154,6 @@ const login = async() => {
   background-color: #162d6b;
 }
 
-/* Register link */
 .register-link {
   margin-top: 20px;
 }
@@ -173,6 +163,4 @@ const login = async() => {
   cursor: pointer;
   font-weight: bold;
 }
-
 </style>
-

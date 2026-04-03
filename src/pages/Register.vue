@@ -1,53 +1,53 @@
-//For JavaScript
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useUserStore } from "@/stores/useUserStore";
 
-const router = useRouter();
+const router    = useRouter();
+const authStore = useAuthStore();
+const userStore = useUserStore();
 
 const fullName = ref("");
-const email = ref("");
+const email    = ref("");
 const password = ref("");
-const role = ref("Student");
+const role     = ref<"Student" | "Parent">("Student");
 
-const register = async () => {
-  // For now just simulate registration
+const register = () => {
   if (!fullName.value || !email.value || !password.value) {
     alert("Please fill all fields");
     return;
   }
 
-  try {
-    const res = await axios.post("http://localhost:5000/api/register", {
-      fullName: fullName.value,
-      email: email.value,
-      password: password.value,
-      role: role.value,
-    });
-    alert("Registration Successful!");
-  router.push("/login");
-  } catch (error) {
-   alert("Registration Failed!") 
+  if (userStore.emailExists(email.value)) {
+    alert("An account with this email already exists.");
+    return;
   }
-  
+
+  const newUser = userStore.addUser({
+    name:     fullName.value,
+    email:    email.value,
+    password: password.value,
+    role:     role.value,
+  });
+
+  authStore.login(newUser);
+
+  alert("Registration Successful!");
+  router.push("/taskbuddy/dashboard");
 };
 </script>
 
-
-
-//For HTML
 <template>
   <div class="register-container">
 
     <!-- Navbar -->
     <nav class="navbar">
       <RouterLink to="/" class="logo-link">
-      <h2 class="logo">TaskBuddy</h2>
-    </RouterLink>
+        <h2 class="logo">TaskBuddy</h2>
+      </RouterLink>
     </nav>
 
-    <!-- Register Card -->
     <div class="register-card">
 
       <h1>Create Account</h1>
@@ -92,22 +92,18 @@ const register = async () => {
   </div>
 </template>
 
-
-//===============================================================
-//For CSS
 <style scoped>
 .register-container {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Navbar */
 .navbar {
   padding: 20px 40px;
   background-color: #1e3a8a;
   color: white;
 }
 
-.logo-link{
+.logo-link {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
@@ -117,7 +113,6 @@ const register = async () => {
   font-size: 24px;
 }
 
-/* Card */
 .register-card {
   max-width: 400px;
   margin: 80px auto;
@@ -136,7 +131,6 @@ const register = async () => {
   margin-bottom: 25px;
 }
 
-/* Form */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -156,7 +150,6 @@ const register = async () => {
   border: 1px solid #ccc;
 }
 
-/* Button */
 .btn-primary {
   width: 100%;
   background-color: #1e3a8a;
@@ -172,7 +165,6 @@ const register = async () => {
   background-color: #162d6b;
 }
 
-/* Login link */
 .login-link {
   margin-top: 20px;
 }
@@ -182,6 +174,4 @@ const register = async () => {
   cursor: pointer;
   font-weight: bold;
 }
-
 </style>
-
