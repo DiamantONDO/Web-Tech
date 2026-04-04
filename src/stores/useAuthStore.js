@@ -6,6 +6,7 @@ export const useAuthStore = defineStore('auth', () => {
   //Pull existing session on app load so refresh doesn't log you out
   const storedUser = sessionStorage.getItem('currentUser')
   const currentUser = ref(storedUser ? JSON.parse(storedUser) : null)
+  
 
   const isLoggedIn = computed(() => currentUser.value !== null)
 
