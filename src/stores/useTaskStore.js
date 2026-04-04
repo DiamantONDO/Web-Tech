@@ -11,6 +11,7 @@ export const useTaskStore = defineStore('tasks', () => {
 
   const storedShares = localStorage.getItem('tb_shared')
   const sharedTasks = ref(storedShares ? JSON.parse(storedShares) : [])
+  
 
   function saveToStorage() {
     localStorage.setItem('tb_tasks', JSON.stringify(tasks.value))
