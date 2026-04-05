@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useTaskStore } from "@/stores/useTaskStore";
 import { useUserStore } from "@/stores/useUserStore";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -89,6 +89,19 @@ const startTask = (id: number) => {
 const deleteTask = (id: number) => {
   if (confirm("Delete this task?")) taskStore.deleteTask(id, currentUserId.value);
 };
+
+const handleKeydown = (e: KeyboardEvent) => {
+  if (e.key === "Escape" && showTaskModal.value) {
+    closeModal();
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", handleKeydown);
+});
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeydown);
+});
 </script>
 
 <template>
